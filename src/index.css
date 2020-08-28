@@ -1,0 +1,79 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+
+}
+
+html {
+	font-size: 62.5%;
+}
+
+body {
+	background-color: #fafafa;
+	color: #333333;
+	font-family: "IBM Plex Sans", sans-serif;
+	font-size: 1.4rem;
+}    
+
+h1 {
+	font-weight: 300;
+	margin-bottom: 1.4rem;
+}
+
+h2 {
+	font-size: 2.2rem;
+	margin-bottom: 1.4rem;
+}
+
+p {
+	margin-bottom: 1.4rem;
+}
+
+a {
+	color: #333333;
+}
+
+.boxed-view {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	height: 100vh;
+	width: 100vw;
+}
+
+.boxed-view--modal {
+	background: rgba(221, 221, 221, 0.7);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.boxed-view__box {
+	box-sizing: unset;
+	background-color: whitesmoke;
+	border: 1px solid #dddddd;
+	padding: 2.4rem;
+	text-align: center;
+	text-align: -webkit-center;
+	min-width: 50%;
+	min-height: 30%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.boxed-view__box:focus {
+	outline: 1px solid gray;
+}
+
+.boxed-view__form {
+	display: flex;
+	flex-direction: column;
+}
+.show{
+	display: block;
+}
+
