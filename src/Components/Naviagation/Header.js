@@ -25,7 +25,7 @@ class Header extends React.Component {
 								<LogoContainer>
 									<Logo>
 										<LogoAnchor>
-											<LogoImage src="https://caeonline.com/Content/Images/logo.png" />
+											<LogoImage src="http://localhost:3000/updatedlogo.png" />
 										</LogoAnchor>
 									</Logo>
 								</LogoContainer>
@@ -37,7 +37,7 @@ class Header extends React.Component {
 													<ListItemAnchor>About Jyy</ListItemAnchor>
 												</MenuListItem>
 												<MenuListItem>
-													<ListItemAnchor>Contact</ListItemAnchor>
+													<ListItemAnchor href="/contact">Contact</ListItemAnchor>
 												</MenuListItem>
 												<MenuListItem>
 													<ListItemAnchor href="/machine">Bidding Items</ListItemAnchor>
@@ -84,6 +84,13 @@ const HeaderContainer = styled.div`
 	position: relative;
 	max-height: 300px;
 	display: block;
+	min-width: 700px;
+	@media (max-width: 1200px) {
+		flex-direction: column !important;
+	}
+	@media (min-width: 1440px) {
+		max-width: 1200px;
+	}
 `;
 
 const HeaderBackgroundImageContainer = styled.div`
@@ -112,6 +119,13 @@ const NavigationContainer = styled.div`
 	left: 0 !important;
 	right: 0;
 	z-index: 499;
+	min-width: 700px;
+	@media (max-width: 1200px) {
+		flex-direction: column !important;
+	}
+	@media (min-width: 1440px) {
+		max-width: 1200px;
+	}
 `;
 const NavigationInnerContainer = styled.div`
 	margin-right: auto;

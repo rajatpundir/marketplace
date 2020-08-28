@@ -16,32 +16,35 @@ import Modal from 'react-modal';
 
 const customStyles = {
 	overlay: {
+		zIndex: 1040,
+		display: 'block',
+		overflowX: 'hidden',
+		overflowY: 'auto',
 		position: 'fixed',
 		top: 0,
-		left: 0,
 		right: 0,
 		bottom: 0,
-		color: 'rgba(130, 130, 130, 0.5)',
-		textAlign: 'center',
-		boxShadow: '0 3px 5px rgba(0, 0, 0, 0.3)',
-		background: 'none',
-		backdropFilter: 'blur(5px)'
-
-		// backgroundColor: 'rgba(255, 255, 255, 0.75)'
+		left: 0,
+		width: '100%',
+		height: '100% ',
+		outline: 0,
+		margin: '0 !important',
+		backgroundColor: '#12121275 '
 	},
 	content: {
-		width: '50%',
-		height: '45%',
-		position: 'absolute',
-		top: '25%',
-		left: '35%',
-		border: '1px solid #ccc',
-		background: '#fff',
-		overflow: 'auto',
-		WebkitOverflowScrolling: 'touch',
+		position: 'relative',
+		padding: 0,
+		maxWidth: '420px',
+		display: 'flex',
+		flexDirection: 'column',
+		width: '100%',
+		backgroundColor: '#fff',
+		margin: '1.75rem auto',
+		backgroundClip: 'padding-box',
+		border: '1px solid rgba(0,0,0,0.2)',
 		borderRadius: '10px',
-		outline: 'none',
-		padding: '20px'
+		boxShadow: '0 0.25rem 0.5rem rgba(0,0,0,0.2)',
+		outline: 0
 	}
 };
 
@@ -63,6 +66,7 @@ class Machine extends React.Component {
 		this.onChange = this.onChange.bind(this);
 		this.placeBid = this.placeBid.bind(this);
 		this.handleClose = this.handleClose.bind(this);
+		this.closeModal = this.closeModal.bind(this);
 	}
 
 	// clear form errors
@@ -227,55 +231,62 @@ class Machine extends React.Component {
 	render() {
 		return (
 			<Container>
-
-			
-			<PageBlock style={{ display: 'block' }} id="customer">
-				<StyledContainer limit={2} />
-				<PageToolbar>
-					<ToolbarLeftItems>
-						<LeftItemH1>available Machine</LeftItemH1>
-					</ToolbarLeftItems>
-				</PageToolbar>
-				<InputBody>
-					<DataOuterContainer>{this.renderMachine()}</DataOuterContainer>
-					<Modal
-						isOpen={this.state.isOpen}
-						contentLabel="Place Bid"
-						onAfterOpen={() => this.refs.price.focus()}
-						onRequestClose={this.closeModal.bind(this)}
-						className="boxed-view__box"
-						style={customStyles}
-						ariaHideApp={false}
-						overlayClassName="boxed-view boxed-view--modal"
-					>
-						<InputFieldContainer>
-							<H2 padding="20px" fontSize="revert" fontWeight="400" color="black">
-								Enter Bid Details
-							</H2>
-							<FormControl>
-								<Input
-									name="price"
-									type="decimal"
-									ref="price"
-									placeholder="Price"
-									value={this.state.price}
-									onChange={this.onChange}
-								/>
-								<InputLabel>Price (Per {this.state.activeMachineUnit})</InputLabel>
-							</FormControl>
-							<FormControl>
-								<Input
-									name="quantity"
-									type="number"
-									placeholder="Quantity"
-									value={this.state.quantity}
-									onChange={this.onChange}
-								/>
-								<InputLabel>Quantity</InputLabel>
-							</FormControl>
-							<FormControl>
-								<Button
-									backgroundColor="#5cc150"
+				<PageBlock style={{ display: 'block' }} id="customer">
+					<StyledContainer limit={2} />
+					<PageToolbar>
+						<ToolbarLeftItems>
+							<LeftItemH1>available Machine</LeftItemH1>
+						</ToolbarLeftItems>
+					</PageToolbar>
+					<InputBody>
+						<DataOuterContainer>{this.renderMachine()}</DataOuterContainer>
+						<Modal
+							isOpen={this.state.isOpen}
+							contentLabel="Place Bid"
+							onAfterOpen={() => this.refs.price.focus()}
+							onRequestClose={this.closeModal}
+							className="boxed-view__box"
+							style={customStyles}
+							ariaHideApp={false}
+							overlayClassName="boxed-view boxed-view--modal"
+						>
+							<ModalHeader>
+								<ModalTitle>Enter Bid Details</ModalTitle>
+								<ModalHeaderCloseButton
+									onClick={(e) => {
+										this.closeModal(e);
+									}}
+								>
+									<span>X</span>
+								</ModalHeaderCloseButton>
+							</ModalHeader>{' '}
+							<ModalBody>
+								<InputFieldContainer>
+									<FormControl>
+										<Input
+											name="price"
+											type="decimal"
+											ref="price"
+											placeholder="Price"
+											value={this.state.price}
+											onChange={this.onChange}
+										/>
+										<InputLabel>Price (Per {this.state.activeMachineUnit})</InputLabel>
+									</FormControl>
+									<FormControl>
+										<Input
+											name="quantity"
+											type="number"
+											placeholder="Quantity"
+											value={this.state.quantity}
+											onChange={this.onChange}
+										/>
+										<InputLabel>Quantity</InputLabel>
+									</FormControl>
+								</InputFieldContainer>
+							</ModalBody>
+							<ModalFooter>
+								<ModalSubmitButton
 									onClick={(e) => {
 										this.setState({
 											dialogOpen: true
@@ -283,77 +294,85 @@ class Machine extends React.Component {
 									}}
 								>
 									Apply
-								</Button>
-							</FormControl>
-						</InputFieldContainer>
-					</Modal>
-					<Dialog
-						open={this.state.dialogOpen}
-						onClose={this.handleClose}
-						aria-labelledby="alert-dialog-title"
-						aria-describedby="alert-dialog-description"
-					>
-						<DialogTitle id="alert-dialog-title">{'Do You Confirm To Place Bid'}</DialogTitle>
-						<DialogContent>
-							<DialogContentText id="alert-dialog-description">
-								a) A quotation from a Supplier shall be irrevocable for a period of thirty (30) days
-								after its receipt by Dialog, unless the request for a quotation stipulates a different
-								period. b) Dialog shall be entitled at all times to terminate negotiations without
-								giving reasons and without being liable to compensate the other party. c) An agreement
-								shall be deemed to have been concluded as soon as Dialog accepts a written quotation by
-								means of placing a written order. If, however, the order is sent after expiry of the
-								period referred to in Article 3(1) or the order deviates significantly from the
-								quotation, the agreement shall be deemed to have been concluded in accordance with the
-								order, unless the Supplier rejects the order in writing within fourteen (14) days of the
-								date of the order. The following items shall form an integral part of the agreement: 1.
-								The (purchase) order from Dialog; 2. These General Terms and Conditions; 3. The
-								quotation; 4. The request for a quotation; In the event of any contradiction between the
-								provisions contained in two different documents, the documents shall prevail in their
-								numerical order, with 1 taking precedence over 2 etc. d) If the Supplier has not made an
-								offer or has made a verbal offer, the agreement shall be deemed to have been concluded
-								by the Supplier accepting, in writing, a written order from Dialog within fourteen (14)
-								days of the date of said order. e) Agreements may only be amended and/or supplemented in
-								writing.
-							</DialogContentText>
-							<CheckBoxContainer>
-								<CheckBoxInput
-									type="checkbox"
-									checked={this.state.termsAgreed}
-									tabindex="55"
-									onChange={(option) => {
-										this.onChange({
-											target: {
-												name: 'termsAgreed',
-												value: !this.state.termsAgreed
-											}
-										});
+								</ModalSubmitButton>
+								<ModalCloseButton
+									onClick={(e) => {
+										this.closeModal(e);
 									}}
-								/>
-								<CheckBoxLabel>I Agree with the above Terms and Conditions</CheckBoxLabel>
-							</CheckBoxContainer>
-						</DialogContent>
-						<DialogActions>
-							<Button
-								onClick={(e) => {
-									this.handleClose();
-								}}
-								backgroundColor="#f95959"
-							>
-								Cancel
-							</Button>
-							<Button
-								onClick={(e) => {
-									this.placeBid(this.state.activeMachine.variableName);
-								}}
-								backgroundColor="#5cc150"
-								autoFocus
-							>
-								Submit
-							</Button>
-						</DialogActions>
-					</Dialog>
-				</InputBody>
-			</PageBlock>
+								>
+									Cancel
+								</ModalCloseButton>
+							</ModalFooter>
+						</Modal>
+
+						<Dialog
+							open={this.state.dialogOpen}
+							onClose={this.handleClose}
+							aria-labelledby="alert-dialog-title"
+							aria-describedby="alert-dialog-description"
+						>
+							<DialogTitle id="alert-dialog-title">{'Do You Confirm To Place Bid'}</DialogTitle>
+							<DialogContent>
+								<DialogContentText id="alert-dialog-description">
+									a) A quotation from a Supplier shall be irrevocable for a period of thirty (30) days
+									after its receipt by Dialog, unless the request for a quotation stipulates a
+									different period. b) Dialog shall be entitled at all times to terminate negotiations
+									without giving reasons and without being liable to compensate the other party. c) An
+									agreement shall be deemed to have been concluded as soon as Dialog accepts a written
+									quotation by means of placing a written order. If, however, the order is sent after
+									expiry of the period referred to in Article 3(1) or the order deviates significantly
+									from the quotation, the agreement shall be deemed to have been concluded in
+									accordance with the order, unless the Supplier rejects the order in writing within
+									fourteen (14) days of the date of the order. The following items shall form an
+									integral part of the agreement: 1. The (purchase) order from Dialog; 2. These
+									General Terms and Conditions; 3. The quotation; 4. The request for a quotation; In
+									the event of any contradiction between the provisions contained in two different
+									documents, the documents shall prevail in their numerical order, with 1 taking
+									precedence over 2 etc. d) If the Supplier has not made an offer or has made a verbal
+									offer, the agreement shall be deemed to have been concluded by the Supplier
+									accepting, in writing, a written order from Dialog within fourteen (14) days of the
+									date of said order. e) Agreements may only be amended and/or supplemented in
+									writing.
+								</DialogContentText>
+								<CheckBoxContainer>
+									<CheckBoxInput
+										type="checkbox"
+										checked={this.state.termsAgreed}
+										tabindex="55"
+										onChange={(option) => {
+											this.onChange({
+												target: {
+													name: 'termsAgreed',
+													value: !this.state.termsAgreed
+												}
+											});
+										}}
+									/>
+									<CheckBoxLabel>I Agree with the above Terms and Conditions</CheckBoxLabel>
+								</CheckBoxContainer>
+							</DialogContent>
+							<DialogActions>
+								<Button
+									onClick={(e) => {
+										this.handleClose();
+									}}
+									backgroundColor="#f95959"
+								>
+									Cancel
+								</Button>
+								<Button
+									onClick={(e) => {
+										this.placeBid(this.state.activeMachine.variableName);
+									}}
+									backgroundColor="#5cc150"
+									autoFocus
+								>
+									Submit
+								</Button>
+							</DialogActions>
+						</Dialog>
+					</InputBody>
+				</PageBlock>
 			</Container>
 		);
 	}
@@ -398,8 +417,6 @@ const ImageContainer = styled.div`
 // height: 200px;
 // margin: 0 auto;
 
-
-
 const Container = styled.div`
 	padding: 0;
 	width: 100%;
@@ -421,9 +438,6 @@ const Container = styled.div`
 		max-width: 1200px;
 	}
 `;
-
-
-
 
 const Image = styled.img`max-width: 100%;`;
 
@@ -539,7 +553,6 @@ const LeftItemH1 = styled.h1`
 	vertical-align: baseline;
 `;
 
-
 const InputBody = styled.div.attrs((props) => ({
 	alignitem: props.alignItem || 'start',
 	borderTop: props.borderTop || '1px solid #e0e1e7'
@@ -572,6 +585,7 @@ const FormControl = styled.div.attrs((props) => ({
 	position: relative;
 	display: flex;
 	align-items: center;
+	width:100%;
 	@media (max-width: 991px) {
 		flex-basis: calc(100% / 2 - 9px) !important;
 	}
@@ -583,7 +597,6 @@ const ToolbarLeftItems = styled.div`
 	align-items: center;
 	float: left;
 `;
-
 
 const Input = styled.input`
 	font-size: 13px;
@@ -639,7 +652,7 @@ const InputLabel = styled.label`
 
 const PageBlock = styled.div`
 	display: block;
-	min-height:500px;
+	min-height: 500px;
 	background: #fff;
 	width: 100%;
 	float: left;
@@ -706,4 +719,135 @@ const CheckBoxContainer = styled.div`
 	margin-right: 10px !important;
 	position: relative;
 	display: flex;
+`;
+
+const ModalHeader = styled.div`
+	display: flex;
+	-ms-flex-align: start;
+	align-items: flex-start;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 18px 20px 18px 20px;
+	height: 63px;
+	border-bottom: 1px solid #e0e1e7;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+`;
+
+const ModalTitle = styled.h4`
+	margin-bottom: 0;
+	color: #3b3b3b;
+	line-height: 16px;
+	font-weight: bold;
+	font-size: 18px;
+`;
+
+const ModalHeaderCloseButton = styled.button`
+	padding: 0;
+	opacity: 0.75;
+	font-weight: 300;
+	font-size: 1.8rem;
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+	text-transform: none;
+	line-height: normal;
+	margin: 0;
+	outline: none;
+	transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+	-webkit-transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+`;
+
+const ModalFooter = styled.div`
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 20px 20px 20px;
+	width: 100%;
+`;
+const ModalSubmitButton = styled.button`
+	margin-right: 8px;
+	min-width: 70px;
+	background-color: #05cbbf;
+	border-color: #05cbbf;
+	border-width: 1px;
+	border-style: solid;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	display: inline-flex;
+	vertical-align: middle;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	height: 40px;
+	white-space: nowrap;
+	border-radius: 4px;
+	padding: 0 16px;
+	cursor: pointer;
+	-webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+
+	&:active {
+		background-color: #00afa5 !important;
+		border-color: #00afa5 !important;
+	}
+	&:hover {
+		outline: none;
+		background-color: #04beb3;
+		border-color: #04beb3;
+		color: #fff;
+	}
+	&:focus {
+		background-color: #04beb3;
+		border-color: #04beb3;
+		color: #fff;
+		outline: none;
+	}
+`;
+
+const ModalCloseButton = styled.button`
+	min-width: 70px;
+	border-color: #b9bdce;
+	border-width: 1px;
+	border-style: solid;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	display: inline-flex;
+	vertical-align: middle;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	background: transparent;
+	color: #3b3b3b;
+	height: 40px;
+	white-space: nowrap;
+	border-radius: 4px;
+	padding: 0 16px;
+	cursor: pointer;
+	-webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	outline: none;
+`;
+
+const ModalBody = styled.div`
+	width: 100%;
+	position: relative;
+	flex-direction: column;
+	display: flex;
+	padding: 20px;
+	font-size: 13px;
+	color: #3b3b3b;
 `;

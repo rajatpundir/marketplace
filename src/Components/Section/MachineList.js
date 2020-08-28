@@ -4,42 +4,47 @@ import { connect } from 'react-redux';
 import { clearErrors } from '../../Actions/errors';
 import { getVariables, updateBidVariable } from '../../Actions/variable';
 import Modal from 'react-modal';
-import { successMessage, customErrorMessage } from './Notification';
+import { successMessage } from './Notification';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+import EditIcon from '@material-ui/icons/Edit';
 
 const customStyles = {
 	overlay: {
+		zIndex: 1040,
+		display: 'block',
+		overflowX: 'hidden',
+		overflowY: 'auto',
 		position: 'fixed',
 		top: 0,
-		left: 0,
 		right: 0,
 		bottom: 0,
-		color: 'rgba(130, 130, 130, 0.5)',
-		textAlign: 'center',
-		boxShadow: '0 3px 5px rgba(0, 0, 0, 0.3)',
-		background: 'none',
-		backdropFilter: 'blur(5px)'
-
-		// backgroundColor: 'rgba(255, 255, 255, 0.75)'
+		left: 0,
+		width: '100%',
+		height: '100% ',
+		outline: 0,
+		margin: '0 !important',
+		backgroundColor: '#12121275 '
 	},
 	content: {
-		width: '50%',
-		height: '45%',
-		position: 'absolute',
-		top: '25%',
-		left: '35%',
-		border: '1px solid #ccc',
-		background: '#fff',
-		overflow: 'auto',
-		WebkitOverflowScrolling: 'touch',
+		position: 'relative',
+		padding: 0,
+		maxWidth: '420px',
+		display: 'flex',
+		flexDirection: 'column',
+		width: '100%',
+		backgroundColor: '#fff',
+		margin: '1.75rem auto',
+		backgroundClip: 'padding-box',
+		border: '1px solid rgba(0,0,0,0.2)',
 		borderRadius: '10px',
-		outline: 'none',
-		padding: '20px'
+		boxShadow: '0 0.25rem 0.5rem rgba(0,0,0,0.2)',
+		outline: 0
 	}
 };
+
 class BiddingList extends React.Component {
 	constructor(props) {
 		super(props);
@@ -52,7 +57,7 @@ class BiddingList extends React.Component {
 			activeMachine: {}
 		};
 		this.onChange = this.onChange.bind(this);
-		// this.updateBid = this.updateBid.bind(this);
+		this.closeModal = this.closeModal.bind(this);
 	}
 
 	componentDidMount() {
@@ -109,15 +114,14 @@ class BiddingList extends React.Component {
 		const list = this.state.activemachineOnly
 			? this.state.machine.filter((machine) => machine.active === true)
 			: this.state.machine;
-			list.forEach((machine) => {
+		list.forEach((machine) => {
 			rows.push(
 				<TableRow onClick={this.handleRowClick} key={machine.variableName}>
 					<TableData width="5%">
 						<SelectIconContainer>
 							<SelectSpan>
 								<SelectSpanInner>
-									<i
-										className="large material-icons"
+									<EditIcon
 										onClick={(e) => {
 											this.setState({
 												activeMachine: machine,
@@ -125,9 +129,7 @@ class BiddingList extends React.Component {
 												machineStatus: machine.active
 											});
 										}}
-									>
-										create
-									</i>{' '}
+									/>
 								</SelectSpanInner>
 							</SelectSpan>
 						</SelectIconContainer>
@@ -261,64 +263,68 @@ class BiddingList extends React.Component {
 				<Modal
 					isOpen={this.state.isOpen}
 					contentLabel="Place Bid"
-					onRequestClose={this.closeModal.bind(this)}
+					onRequestClose={this.closeModal}
 					className="boxed-view__box"
 					style={customStyles}
 					ariaHideApp={false}
 					overlayClassName="boxed-view boxed-view--modal"
 				>
-					<InputFieldContainer>
-						<H2 padding="20px" fontSize="revert" fontWeight="400" color="black">
-							Update Machine Status
-						</H2>
-						<FormControl width="45%">
-							<SelectWrapper>
-								<Select
-									value={{
-										value: this.state.machineStatus,
-										label: this.state.machineStatus ? 'Active' : 'Disabled'
-									}}
-									onChange={(option) => {
-										this.onChange({
-											target: { name: 'machineStatus', value: option.value }
-										});
-									}}
-									options={[
-										{
-											value: true,
-											label: 'Active'
-										},
-										{
-											value: false,
-											label: 'Disabled'
-										}
-									]}
-								/>
-							</SelectWrapper>
-							<InputLabel>Status</InputLabel>
-						</FormControl>
-						<FormControl>
-							<Button
-								backgroundColor="#5cc150"
-								onClick={(e) => {
-									this.updateMachineStatus(this.state.activeMachine);
-								}}
-							>
-								Submit
-							</Button>
-							<Button
-								backgroundColor="#f95959"
-								marginleft="20px"
-								onClick={(e) => {
-									this.setState({
-										isOpen: false
-									});
-								}}
-							>
-								Cancel
-							</Button>
-						</FormControl>
-					</InputFieldContainer>
+					<ModalHeader>
+						<ModalTitle>Add Machine For Bidding</ModalTitle>
+						<ModalHeaderCloseButton
+							onClick={(e) => {
+								this.closeModal(e);
+							}}
+						>
+							<span>X</span>
+						</ModalHeaderCloseButton>
+					</ModalHeader>{' '}
+					<ModalBody>
+						<InputFieldContainer>
+							<FormControl width="100%">
+								<SelectWrapper>
+									<Select
+										value={{
+											value: this.state.machineStatus,
+											label: this.state.machineStatus ? 'Active' : 'Disabled'
+										}}
+										onChange={(option) => {
+											this.onChange({
+												target: { name: 'machineStatus', value: option.value }
+											});
+										}}
+										options={[
+											{
+												value: true,
+												label: 'Active'
+											},
+											{
+												value: false,
+												label: 'Disabled'
+											}
+										]}
+									/>
+								</SelectWrapper>
+								<InputLabel>Status</InputLabel>
+							</FormControl>
+						</InputFieldContainer>
+					</ModalBody>
+					<ModalFooter>
+						<ModalSubmitButton
+							onClick={(e) => {
+								this.updateMachineStatus(this.state.activeMachine);
+							}}
+						>
+							Save
+						</ModalSubmitButton>
+						<ModalCloseButton
+							onClick={(e) => {
+								this.closeModal(e);
+							}}
+						>
+							Cancel
+						</ModalCloseButton>
+					</ModalFooter>
 				</Modal>
 			</Container>
 		);
@@ -335,7 +341,7 @@ const DataOuterContainer = styled.div`width: 100%;`;
 
 const FormControl = styled.div.attrs((props) => ({
 	paddingTop: props.paddingTop,
-	width: props.width
+	width: props.width || '100%'
 }))`
 	padding-bottom: 20px;
     padding-top:${(props) => props.paddingTop};
@@ -657,6 +663,7 @@ align-items: ${(props) => props.alignItem};
 	padding: ${(props) => props.padding};
 `;
 const SelectWrapper = styled.div`
+    
 	font-size: 13px;
 	outline: none !important;
 	border-width: 1px;
@@ -681,6 +688,7 @@ const SelectWrapper = styled.div`
 	margin: 0;
 	outline: none;
 	vertical-align: baseline;
+	width:100%;
 `;
 const Input = styled.input.attrs((props) => ({
 	width: props.width || 'inherit',
@@ -989,4 +997,135 @@ const CheckBoxContainer = styled.div`
 	margin-right: 10px !important;
 	position: relative;
 	display: flex;
+`;
+
+const ModalHeader = styled.div`
+	display: flex;
+	-ms-flex-align: start;
+	align-items: flex-start;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 18px 20px 18px 20px;
+	height: 63px;
+	border-bottom: 1px solid #e0e1e7;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+`;
+
+const ModalTitle = styled.h4`
+	margin-bottom: 0;
+	color: #3b3b3b;
+	line-height: 16px;
+	font-weight: bold;
+	font-size: 18px;
+`;
+
+const ModalHeaderCloseButton = styled.button`
+	padding: 0;
+	opacity: 0.75;
+	font-weight: 300;
+	font-size: 1.8rem;
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+	text-transform: none;
+	line-height: normal;
+	margin: 0;
+	outline: none;
+	transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+	-webkit-transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+`;
+
+const ModalFooter = styled.div`
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 20px 20px 20px;
+	width: 100%;
+`;
+const ModalSubmitButton = styled.button`
+	margin-right: 8px;
+	min-width: 70px;
+	background-color: #05cbbf;
+	border-color: #05cbbf;
+	border-width: 1px;
+	border-style: solid;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	display: inline-flex;
+	vertical-align: middle;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	height: 40px;
+	white-space: nowrap;
+	border-radius: 4px;
+	padding: 0 16px;
+	cursor: pointer;
+	-webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+
+	&:active {
+		background-color: #00afa5 !important;
+		border-color: #00afa5 !important;
+	}
+	&:hover {
+		outline: none;
+		background-color: #04beb3;
+		border-color: #04beb3;
+		color: #fff;
+	}
+	&:focus {
+		background-color: #04beb3;
+		border-color: #04beb3;
+		color: #fff;
+		outline: none;
+	}
+`;
+
+const ModalCloseButton = styled.button`
+	min-width: 70px;
+	border-color: #b9bdce;
+	border-width: 1px;
+	border-style: solid;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	display: inline-flex;
+	vertical-align: middle;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	background: transparent;
+	color: #3b3b3b;
+	height: 40px;
+	white-space: nowrap;
+	border-radius: 4px;
+	padding: 0 16px;
+	cursor: pointer;
+	-webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	outline: none;
+`;
+
+const ModalBody = styled.div`
+	width: 100%;
+	position: relative;
+	flex-direction: column;
+	display: flex;
+	padding: 20px;
+	font-size: 13px;
+	color: #3b3b3b;
 `;

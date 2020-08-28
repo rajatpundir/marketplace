@@ -11,19 +11,10 @@ import { successMessage } from './Notification';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
+
 const customStyles = {
 	overlay: {
-		// position: 'fixed',
-		// top: 0,
-		// left: 0,
-		// right: 0,
-		// bottom: 0,
-		// color: 'rgba(130, 130, 130, 0.5)',
-		// textAlign: 'center',
-		// boxShadow: '0 3px 5px rgba(0, 0, 0, 0.3)',
-		// background: 'none',
-		// backdropFilter: 'blur(5px)',
-
+	
 		zIndex: 1040,
 		display: 'block',
 		overflowX: 'hidden',
@@ -40,19 +31,6 @@ const customStyles = {
 		backgroundColor: '#12121275 '
 	},
 	content: {
-		// width: '50%',
-		// height: '45%',
-		// position: 'absolute',
-		// top: '25%',
-		// left: '35%',
-		// border: '1px solid #ccc',
-		// background: '#fff',
-		// overflow: 'auto',
-		// WebkitOverflowScrolling: 'touch',
-		// borderRadius: '10px',
-		// outline: 'none',
-		// padding: '20px'
-
 		position: 'relative',
 		padding: 0,
 		maxWidth: '420px',
@@ -68,6 +46,7 @@ const customStyles = {
 		outline: 0
 	}
 };
+
 class CreateMachine extends React.Component {
 	constructor(props) {
 		super(props);

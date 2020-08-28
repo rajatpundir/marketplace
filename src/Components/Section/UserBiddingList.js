@@ -7,37 +7,42 @@ import Modal from 'react-modal';
 import { successMessage, customErrorMessage } from './Notification';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EditIcon from '@material-ui/icons/Edit';
 
 const customStyles = {
 	overlay: {
+		zIndex: 1040,
+		display: 'block',
+		overflowX: 'hidden',
+		overflowY: 'auto',
 		position: 'fixed',
 		top: 0,
-		left: 0,
 		right: 0,
 		bottom: 0,
-		color: 'rgba(130, 130, 130, 0.5)',
-		textAlign: 'center',
-		boxShadow: '0 3px 5px rgba(0, 0, 0, 0.3)',
-		background: 'none',
-		backdropFilter: 'blur(5px)'
-
-		// backgroundColor: 'rgba(255, 255, 255, 0.75)'
+		left: 0,
+		width: '100%',
+		height: '100% ',
+		outline: 0,
+		margin: '0 !important',
+		backgroundColor: '#12121275 '
 	},
 	content: {
-		width: '50%',
-		height: '45%',
-		position: 'absolute',
-		top: '25%',
-		left: '35%',
-		border: '1px solid #ccc',
-		background: '#fff',
-		overflow: 'auto',
-		WebkitOverflowScrolling: 'touch',
+		position: 'relative',
+		padding: 0,
+		maxWidth: '420px',
+		display: 'flex',
+		flexDirection: 'column',
+		width: '100%',
+		backgroundColor: '#fff',
+		margin: '1.75rem auto',
+		backgroundClip: 'padding-box',
+		border: '1px solid rgba(0,0,0,0.2)',
 		borderRadius: '10px',
-		outline: 'none',
-		padding: '20px'
+		boxShadow: '0 0.25rem 0.5rem rgba(0,0,0,0.2)',
+		outline: 0
 	}
 };
+
 class UserBiddingList extends React.Component {
 	constructor(props) {
 		super(props);
@@ -124,21 +129,15 @@ class UserBiddingList extends React.Component {
 						<SelectIconContainer>
 							<SelectSpan>
 								<SelectSpanInner>
-									{bids.values.status === 'Pending' ? (
-										<i className="large material-icons">
-										{/* // onClick={(e) => {
-										// 	this.setState({
-										//         activebid:bids,
-										// 		isOpen: !this.state.isOpen,
-										// 		price: bids.values.price,
-										// 		quantity: bids.values.quantity
-										// 	});
-										// }} */}
-											create
-										</i>
-									) : (
-										undefined
-									)}
+									{/* onClick={(e) => {
+										 	this.setState({
+										         activebid:bids,
+									 		isOpen: !this.state.isOpen,
+												price: bids.values.price,
+												quantity: bids.values.quantity
+										 	});
+										 }} */}
+									{bids.values.status === 'Pending' ? <EditIcon /> : undefined}
 								</SelectSpanInner>
 							</SelectSpan>
 						</SelectIconContainer>
@@ -260,53 +259,61 @@ class UserBiddingList extends React.Component {
 					ariaHideApp={false}
 					overlayClassName="boxed-view boxed-view--modal"
 				>
-					<InputFieldContainer>
-						<H2 padding="20px" fontSize="revert" fontWeight="400" color="black">
-							Enter Bid Details
-						</H2>
-						<FormControl>
-							<Input
-								name="price"
-								type="decimal"
-								ref="price"
-								placeholder="Price"
-								value={this.state.price}
-								onChange={this.onChange}
-							/>
-							<InputLabel>Price</InputLabel>
-						</FormControl>
-						<FormControl>
-							<Input
-								name="quantity"
-								type="number"
-								placeholder="Quantity"
-								value={this.state.quantity}
-								onChange={this.onChange}
-							/>
-							<InputLabel>Quantity</InputLabel>
-						</FormControl>
-						<FormControl>
-							<Button
-								backgroundColor="#5cc150"
-								onClick={(e) => {
-									this.updateBid(this.state.activebid);
-								}}
-							>
-								Submit
-							</Button>
-							<Button
-								backgroundColor="#f95959"
-								marginleft="20px"
-								onClick={(e) => {
-									this.setState({
-										isOpen: false
-									});
-								}}
-							>
-								Cancel
-							</Button>
-						</FormControl>
-					</InputFieldContainer>
+					<ModalHeader>
+						<ModalTitle> Enter Bid Details</ModalTitle>
+						<ModalHeaderCloseButton
+							onClick={(e) => {
+								this.setState({
+									isOpen: false
+								});
+							}}
+						>
+							<span>X</span>
+						</ModalHeaderCloseButton>
+					</ModalHeader>{' '}
+					<ModalBody>
+						<InputFieldContainer>
+							<FormControl>
+								<Input
+									name="price"
+									type="decimal"
+									ref="price"
+									placeholder="Price"
+									value={this.state.price}
+									onChange={this.onChange}
+								/>
+								<InputLabel>Price</InputLabel>
+							</FormControl>
+							<FormControl>
+								<Input
+									name="quantity"
+									type="number"
+									placeholder="Quantity"
+									value={this.state.quantity}
+									onChange={this.onChange}
+								/>
+								<InputLabel>Quantity</InputLabel>
+							</FormControl>
+						</InputFieldContainer>
+					</ModalBody>
+					<ModalFooter>
+						<ModalSubmitButton
+							onClick={(e) => {
+								this.updateBid(this.state.activebid);
+							}}
+						>
+							Save
+						</ModalSubmitButton>
+						<ModalCloseButton
+							onClick={(e) => {
+								this.setState({
+									isOpen: false
+								});
+							}}
+						>
+							Cancel
+						</ModalCloseButton>
+					</ModalFooter>
 				</Modal>
 			</Container>
 		);
@@ -319,7 +326,6 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { clearErrors, getVariables, updateBidVariable })(UserBiddingList);
-const DataOuterContainer = styled.div`width: 100%;`;
 
 const FormControl = styled.div.attrs((props) => ({
 	paddingTop: props.paddingTop
@@ -329,6 +335,7 @@ const FormControl = styled.div.attrs((props) => ({
 	min-height: 60px;
 	position: relative;
 	display: flex;
+	width:100%;
 	align-items: center;
 	@media (max-width: 991px) {
 		flex-basis: calc(100% / 2 - 9px) !important;
@@ -359,36 +366,7 @@ const InputLabel = styled.label`
 		box-sizing: border-box;
 	}
 `;
-const H2 = styled.h2.attrs((props) => ({
-	padding: props.padding || 'none',
-	color: props.color,
-	fontWeight: props.fontWeight || 'bold',
-	fontSize: props.fontSize || '1em'
-}))`
-	padding: ${(props) => props.padding};
-	color: ${(props) => props.color};
-	font-weight:${(props) => props.fontWeight};
-	text-transform: none;
-	font-size: ${(props) => props.fontSize};
-	letter-spacing: 0;
-	line-height: 1.1;
-	display: inline;
-`;
-const Button = styled.button.attrs((props) => ({
-	marginleft: props.marginleft,
-	backgroundColor: props.backgroundColor
-}))`
-	height: 40px;
-	margin-left:${(props) => props.marginleft};
-	background-color:${(props) => props.backgroundColor};
-	outline: none !important;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 4px;
-	border-color: #b9bdce;
-	color: #151617;
-	padding: 10px;
-`;
+
 
 const InputFieldContainer = styled.div`
 	height: -webkit-fill-available;
@@ -433,34 +411,7 @@ const StyledContainer = styled(ToastContainer).attrs(
 	.Toastify__progress-bar {}
   `;
 
-const DataContainer = styled.div`
-	height: auto;
-	max-height: 100vh;
-	text-align: left;
-	font-size: 13px;
-	width: 100%;
-	float: left;
-	overflow: hidden;
-	animation-name: slideDown;
-	animation-duration: 0.8s;
-	animation-timing-function: ease-in-out;
-`;
-const TableDiv = styled.div`display: table;`;
-const RowContainer = styled.div`display: table-row-group;`;
-const Row = styled.div`display: table-row;`;
-const LeftItem = styled.div`
-	display: table-cell;
-	font-weight: bold;
-	text-align: left;
-	padding: 10px 20px;
-	width: 250px;
-`;
-const RightItem = styled.div`
-	display: table-cell;
-	text-align: left;
-	padding: 10px 20px;
-	width: 250px;
-`;
+
 
 //different Style
 const Container = styled.div`
@@ -605,20 +556,7 @@ const PageBody = styled.div`
 	}
 `;
 
-const PageBlock = styled.div`
-	display: block;
-	background: #fff;
-	width: 100%;
-	float: left;
-	border-radius: 6px;
-	margin-bottom: 20px;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	font-family: 'IBM Plex Sans', sans-serif;
-	vertical-align: baseline;
-	align-items: center;
-`;
+
 
 const InputBody = styled.div.attrs((props) => ({
 	alignitem: props.alignItem || 'start',
@@ -642,32 +580,7 @@ align-items: ${(props) => props.alignItem};
 	width: 100%;
 	padding: ${(props) => props.padding};
 `;
-const SelectWrapper = styled.div`
-	font-size: 13px;
-	outline: none !important;
-	border-width: 1px;
-	border-radius: 4px;
-	border-color: #b9bdce;
-	color: #3b3b3b;
-	font-size: 13px;
-	font-weight: 400;
-	font-family: inherit;
-	min-width: 100px;
-	flex: 1;
-	min-height: 40px;
-	background-color: #fff;
-	-webkit-transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-	transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	appearance: none;
-	font-family: "IBM Plex Sans", sans-serif !important;
-	line-height: normal;
-	font-size: 100%;
-	margin: 0;
-	outline: none;
-	vertical-align: baseline;
-`;
+
 const Input = styled.input.attrs((props) => ({
 	width: props.width || 'inherit',
 	height: props.height || '40px',
@@ -702,14 +615,6 @@ const Input = styled.input.attrs((props) => ({
 	vertical-align: baseline;
 `;
 
-const PageBar = styled.div`
-	flex-flow: row wrap;
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	padding: 20px 20px 0 20px;
-	border-top: 1px solid #e0e1e7;
-`;
 
 const RoundedBlock = styled.div.attrs((props) => ({
 	marginTop: props.marginTop || '0',
@@ -809,12 +714,7 @@ left:${(props) => props.left};
 	}
 `;
 
-const HiddenTableData = styled.div`
-	background: #fafbfd;
-	border-bottom: 1px solid #e7e8ec;
-	color: #707887;
-	width: max-content;
-`;
+
 
 const TableData = styled.td`
 	font-family: inherit;
@@ -837,114 +737,11 @@ const TableHeaderInner = styled.div`
 	text-overflow: ellipsis;
 	text-align: center;
 `;
-const Span = styled.span`
-	background-color: #d6f3e3;
-	margin-right: 0 !important;
-	padding: 4px 10px 4px 10px;
-	border-radius: 3px;
-	display: inline-block;
-	font-weight: 500;
-`;
 
-const Anchor = styled.a`
-	text-decoration: none;
-	color: #05cbbf;
-`;
 
-const EmptyRow = styled.div`
-	text-align: center;
-	border-bottom: 1px solid #e7e8ec;
-	min-height: 59px !important;
-	line-height: 55px;
-`;
 
-const PlusButton = styled.button`
-	margin-left: 5px;
-	color: #04beb3;
-	background-color: #05cbbf;
-	border-color: #05cbbf;
-	width: 32px !important;
-	min-width: 32px !important;
-	max-width: 32px !important;
-	justify-content: center;
-	padding: 0 !important;
-	height: 32px !important;
-	text-align: center;
-	border-width: 1px;
-	border-style: solid;
-	font-family: inherit;
-	font-size: 13px;
-	font-weight: 500;
-	text-decoration: none;
-	display: inline-flex;
-	vertical-align: middle;
-	flex-direction: row;
-	align-items: center;
-	background: transparent;
-	white-space: nowrap;
-	border-radius: 4px;
-`;
-const CheckBoxWapper = styled.div`
-	float: left;
-	width: 16px;
-`;
-const CheckBoxTable = styled.table`
-	width: 35% !important;
-	table-layout: auto !important;
-	border-collapse: inherit !important;
-	border-spacing: 0;
-`;
 
-const TBody = styled.tbody``;
-const TR = styled.tr``;
-const TD = styled.td`
-	width: 100% !important;
-	height: 16px;
-	line-height: 1px;
-	position: relative;
-	font-weight: normal;
-	overflow: hidden;
-	cursor: pointer;
-	vertical-align: top;
-	// &:before {
-	// 	border-width: 1px;
-	// 	border-style: solid;
-	// 	border-radius: 4px;
-	// 	border-color: #b9bdce;
-	// 	content: '';
-	// 	width: 16px;
-	// 	height: 16px;
-	// 	position: absolute;
-	// 	left: 0;
-	// 	top: 0;
-	// 	text-align: center;
-	// 	font-size: 21px;
-	// 	display: flex;
-	// 	background-color: transparent;
-	// 	justify-content: center;
-	// 	-webkit-transition: all 0.15s ease-in-out;
-	// 	pointer-events: none;
-	// }
-	// &:after {
-	// 	content: '\e81a';
-	// 	line-height: 18px;
-	// 	font-style: normal;
-	// 	color: transparent;
-	// 	font-family: 'icons_2019';
-	// 	width: 16px;
-	// 	height: 16px;
-	// 	position: absolute;
-	// 	left: 0;
-	// 	top: 0;
-	// 	text-align: center;
-	// 	font-size: 21px;
-	// 	display: flex;
-	// 	background-color: transparent;
-	// 	justify-content: center;
-	// 	transition: all 0.15s ease-in-out;
-	// 	pointer-events: none;
-	// }
-`;
+
 
 const CheckBoxInput = styled.input`
 	width: 16px;
@@ -975,4 +772,135 @@ const CheckBoxContainer = styled.div`
 	margin-right: 10px !important;
 	position: relative;
 	display: flex;
+`;
+
+const ModalHeader = styled.div`
+	display: flex;
+	-ms-flex-align: start;
+	align-items: flex-start;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	padding: 18px 20px 18px 20px;
+	height: 63px;
+	border-bottom: 1px solid #e0e1e7;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+`;
+
+const ModalTitle = styled.h4`
+	margin-bottom: 0;
+	color: #3b3b3b;
+	line-height: 16px;
+	font-weight: bold;
+	font-size: 18px;
+`;
+
+const ModalHeaderCloseButton = styled.button`
+	padding: 0;
+	opacity: 0.75;
+	font-weight: 300;
+	font-size: 1.8rem;
+	background-color: transparent;
+	border: 0;
+	cursor: pointer;
+	text-transform: none;
+	line-height: normal;
+	margin: 0;
+	outline: none;
+	transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+	-webkit-transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+`;
+
+const ModalFooter = styled.div`
+	display: flex;
+	-ms-flex-align: center;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 0 20px 20px 20px;
+	width: 100%;
+`;
+const ModalSubmitButton = styled.button`
+	margin-right: 8px;
+	min-width: 70px;
+	background-color: #05cbbf;
+	border-color: #05cbbf;
+	border-width: 1px;
+	border-style: solid;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	display: inline-flex;
+	vertical-align: middle;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	height: 40px;
+	white-space: nowrap;
+	border-radius: 4px;
+	padding: 0 16px;
+	cursor: pointer;
+	-webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+
+	&:active {
+		background-color: #00afa5 !important;
+		border-color: #00afa5 !important;
+	}
+	&:hover {
+		outline: none;
+		background-color: #04beb3;
+		border-color: #04beb3;
+		color: #fff;
+	}
+	&:focus {
+		background-color: #04beb3;
+		border-color: #04beb3;
+		color: #fff;
+		outline: none;
+	}
+`;
+
+const ModalCloseButton = styled.button`
+	min-width: 70px;
+	border-color: #b9bdce;
+	border-width: 1px;
+	border-style: solid;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 500;
+	text-align: center;
+	text-decoration: none;
+	display: inline-flex;
+	vertical-align: middle;
+	justify-content: center;
+	flex-direction: row;
+	align-items: center;
+	background: transparent;
+	color: #3b3b3b;
+	height: 40px;
+	white-space: nowrap;
+	border-radius: 4px;
+	padding: 0 16px;
+	cursor: pointer;
+	-webkit-transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, border-color 0.15s ease-in-out,
+		opacity 0.15s ease-in-out;
+	outline: none;
+`;
+
+const ModalBody = styled.div`
+	width: 100%;
+	position: relative;
+	flex-direction: column;
+	display: flex;
+	padding: 20px;
+	font-size: 13px;
+	color: #3b3b3b;
 `;
